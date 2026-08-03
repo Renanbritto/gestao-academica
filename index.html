@@ -252,7 +252,7 @@
 
         <!-- SUB TAB 2: CADASTRAR MATÉRIA -->
         <div id="subtab-add-materia" class="sub-tab-content glass" style="padding: 24px; display: none;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div class="grid-2col-responsive" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
             <div>
               <div class="card-title">
                 <i class="fa-solid fa-plus-circle" style="color: var(--accent-primary);"></i>
@@ -287,7 +287,7 @@
                 Matérias Existentes
               </div>
               <div class="table-container">
-                <table>
+                <table class="desktop-table">
                   <thead>
                     <tr>
                       <th>Matéria</th>
@@ -300,6 +300,9 @@
                     <!-- Rendered via JS -->
                   </tbody>
                 </table>
+                <div class="mobile-subjects-list" id="mobile-subjects-list">
+                  <!-- Rendered via JS for mobile -->
+                </div>
               </div>
             </div>
           </div>

@@ -559,8 +559,8 @@ tbody tr:hover {
   background: var(--table-hover);
 }
 
-/* MOBILE CARDS FOR ACTIVITIES */
-.mobile-activities-cards {
+/* MOBILE CARDS FOR ACTIVITIES & SUBJECTS */
+.mobile-activities-cards, .mobile-subjects-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -613,17 +613,34 @@ tbody tr:hover {
   font-size: 0.85rem !important;
 }
 
+.subject-mobile-card {
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
 @media (max-width: 768px) {
   .desktop-table {
     display: none !important;
   }
-  .mobile-activities-cards {
+  .mobile-activities-cards, .mobile-subjects-list {
     display: flex !important;
+  }
+
+  /* EMPILHAMENTO DE FORMULÁRIO E LISTA DE MATÉRIAS EM 1 COLUNA NO MOBILE */
+  .grid-2col-responsive {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
   }
 }
 
 @media (min-width: 769px) {
-  .mobile-activities-cards {
+  .mobile-activities-cards, .mobile-subjects-list {
     display: none !important;
   }
   .desktop-table {
@@ -691,6 +708,7 @@ tbody tr:hover {
   padding-bottom: 10px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 .sub-tab-btn {
@@ -703,6 +721,7 @@ tbody tr:hover {
   border-radius: 10px;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .sub-tab-btn.active {
@@ -869,7 +888,7 @@ tbody tr:hover {
   /* BARRA DE NAVEGAÇÃO INFERIOR PARA CELULAR (MOBILE BOTTOM TAB BAR) */
   .app-container {
     flex-direction: column;
-    padding-bottom: 75px; /* Espaço para a barra inferior fixa */
+    padding-bottom: 75px;
   }
 
   aside {

@@ -506,11 +506,15 @@ function renderSubjectOptions() {
   if (calcSelect) calcSelect.innerHTML = optionsHTML;
   if (actSelect) actSelect.innerHTML = optionsHTML;
 
-  // Subjects List Table in Subject Management
+  // Subjects List Table & Mobile Cards
   const subTbody = document.getElementById('subjects-list-tbody');
-  if (subTbody) {
-    subTbody.innerHTML = '';
-    subjects.forEach(sub => {
+  const mobileSubList = document.getElementById('mobile-subjects-list');
+
+  if (subTbody) subTbody.innerHTML = '';
+  if (mobileSubList) mobileSubList.innerHTML = '';
+
+  subjects.forEach(sub => {
+    if (subTbody) {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td><span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:${sub.color}; margin-right:8px;"></span><strong>${sub.name}</strong></td>
@@ -521,8 +525,26 @@ function renderSubjectOptions() {
         </td>
       `;
       subTbody.appendChild(tr);
-    });
-  }
+    }
+
+    if (mobileSubList) {
+      const div = document.createElement('div');
+      div.className = 'subject-mobile-card';
+      div.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px; flex:1;">
+          <span style="width:12px; height:12px; border-radius:50%; background:${sub.color}; display:inline-block; flex-shrink:0;"></span>
+          <div>
+            <div style="font-weight:700; font-size:0.9rem;">${sub.name}</div>
+            <div style="font-size:0.78rem; color:var(--text-muted);">${sub.professor || 'Prof. Não informado'} • Meta: ${sub.target_grade} pts</div>
+          </div>
+        </div>
+        <button class="btn-danger" style="padding:8px 12px;" onclick="deleteSubject(${sub.id})">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      `;
+      mobileSubList.appendChild(div);
+    }
+  });
 }
 
 function renderProfileForm() {
