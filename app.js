@@ -3,10 +3,10 @@
 // =============================================================================
 
 const STORAGE_KEYS = {
-  PROFILE: 'academic_profile_v5',
-  SUBJECTS: 'academic_subjects_v5',
-  ACTIVITIES: 'academic_activities_v5',
-  THEME: 'academic_theme_v5'
+  PROFILE: 'academic_profile_v6',
+  SUBJECTS: 'academic_subjects_v6',
+  ACTIVITIES: 'academic_activities_v6',
+  THEME: 'academic_theme_v6'
 };
 
 const PASSING_GRADE = 70.0; // Pontuação mínima para aprovação na faculdade
@@ -17,7 +17,7 @@ const DEFAULT_PROFILE = {
   course: 'Direito',
   period: '7º Período',
   target_gpa: 85.0, // Meta 85 pontos de 100
-  love_note: 'Você é incrível e vai arrasar em todas as provas de Direito! ❤️',
+  love_note: 'Bem vinda ao seu painel da facul, boa volta as aulas! ❤️',
   theme: 'dark',
   avatar_data_url: null
 };
