@@ -220,11 +220,12 @@
         <div id="subtab-atividades" class="sub-tab-content glass" style="padding: 24px;">
           <div class="card-title">
             <i class="fa-solid fa-list-check" style="color: var(--accent-primary);"></i>
-            Tabela de Atividades & Provas Registradas
+            Atividades & Provas Registradas
           </div>
 
           <div class="table-container">
-            <table>
+            <!-- Tabela para Desktop -->
+            <table class="desktop-table">
               <thead>
                 <tr>
                   <th>Matéria</th>
@@ -241,6 +242,11 @@
                 <!-- Rendered via JS -->
               </tbody>
             </table>
+
+            <!-- Cards Interativos para Celular (Mobile) -->
+            <div class="mobile-activities-cards" id="mobile-activities-cards">
+              <!-- Rendered via JS -->
+            </div>
           </div>
         </div>
 

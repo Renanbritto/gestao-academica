@@ -353,11 +353,14 @@ function renderSubjectBarChart() {
 
 function renderActivitiesTable() {
   const tbody = document.getElementById('activities-tbody');
-  if (!tbody) return;
-  tbody.innerHTML = '';
+  const mobileCardsContainer = document.getElementById('mobile-activities-cards');
+
+  if (tbody) tbody.innerHTML = '';
+  if (mobileCardsContainer) mobileCardsContainer.innerHTML = '';
 
   if (activities.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Nenhuma atividade cadastrada.</td></tr>`;
+    if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Nenhuma atividade cadastrada.</td></tr>`;
+    if (mobileCardsContainer) mobileCardsContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">Nenhuma atividade cadastrada.</p>`;
     return;
   }
 
@@ -374,25 +377,59 @@ function renderActivitiesTable() {
     let typeBadge = `<span class="badge badge-info">${act.type}</span>`;
     if (act.type === 'Prova') typeBadge = `<span class="badge badge-danger">Prova</span>`;
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><strong>${subName}</strong></td>
-      <td>${act.title}</td>
-      <td>${typeBadge}</td>
-      <td>${act.due_date}</td>
-      <td>${act.weight}%</td>
-      <td><strong>${gradeText}</strong></td>
-      <td>${statusBadge}</td>
-      <td>
-        <button class="btn-secondary" onclick="toggleActivityStatus(${act.id})">
-          ${act.status === 'Pendente' ? '✅ Concluir' : '🔄 Reabrir'}
-        </button>
-        <button class="btn-danger" onclick="deleteActivity(${act.id})">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
+    // 1. Render Desktop Table Row
+    if (tbody) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${subName}</strong></td>
+        <td>${act.title}</td>
+        <td>${typeBadge}</td>
+        <td>${act.due_date}</td>
+        <td>${act.weight}%</td>
+        <td><strong>${gradeText}</strong></td>
+        <td>${statusBadge}</td>
+        <td>
+          <button class="btn-secondary" onclick="toggleActivityStatus(${act.id})">
+            ${act.status === 'Pendente' ? '✅ Concluir' : '🔄 Reabrir'}
+          </button>
+          <button class="btn-danger" onclick="deleteActivity(${act.id})">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // 2. Render Mobile Card Item
+    if (mobileCardsContainer) {
+      const card = document.createElement('div');
+      card.className = 'activity-mobile-card';
+      card.innerHTML = `
+        <div class="activity-mobile-header">
+          <span style="font-size: 0.82rem; font-weight: 700; color: ${sub ? sub.color : 'var(--accent-primary)'};">${subName}</span>
+          <div style="display:flex; gap:6px;">
+            ${typeBadge}
+            ${statusBadge}
+          </div>
+        </div>
+        <div class="activity-mobile-title">${act.title}</div>
+        <div class="activity-mobile-meta">
+          <div>📅 <strong>Data:</strong> ${act.due_date}</div>
+          <div>⚖️ <strong>Peso:</strong> ${act.weight}%</div>
+          <div>📝 <strong>Nota:</strong> <strong>${gradeText}</strong></div>
+          <div>📌 <strong>Obs:</strong> ${act.notes || 'Sem obs'}</div>
+        </div>
+        <div class="activity-mobile-actions">
+          <button class="btn-secondary" onclick="toggleActivityStatus(${act.id})">
+            ${act.status === 'Pendente' ? '✅ Concluir' : '🔄 Reabrir'}
+          </button>
+          <button class="btn-danger" onclick="deleteActivity(${act.id})">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
+        </div>
+      `;
+      mobileCardsContainer.appendChild(card);
+    }
   });
 }
 
