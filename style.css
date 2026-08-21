@@ -1139,9 +1139,12 @@ tbody tr:hover {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 130px 20px 60px;
+  padding: 70px 20px 30px;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Oculta barra no Firefox */
+  -ms-overflow-style: none; /* Oculta barra no Edge */
   background:
     radial-gradient(circle at 50% 15%, rgba(99, 102, 241, 0.18), transparent 45%),
     radial-gradient(circle at 80% 85%, rgba(236, 72, 153, 0.15), transparent 45%),
@@ -1149,6 +1152,12 @@ tbody tr:hover {
   color: var(--text-main);
   font-family: 'Plus Jakarta Sans', 'Sora', sans-serif;
   transition: opacity .5s cubic-bezier(.4, 0, .2, 1), transform .5s cubic-bezier(.4, 0, .2, 1), visibility .5s;
+}
+
+.scene::-webkit-scrollbar {
+  display: none; /* Oculta barra no Chrome, Safari e Opera */
+  width: 0;
+  height: 0;
 }
 
 .scene.hidden {
@@ -1706,8 +1715,32 @@ tbody tr:hover {
 }
 
 @media (max-width: 560px) {
-  .scene { padding-top: 110px; }
-  .bubble { max-width: 240px; font-size: 12px; }
+  .scene {
+    padding: 20px 14px 20px;
+    justify-content: center;
+  }
+  .stage {
+    padding-top: 48px;
+    transform: scale(0.92);
+    transform-origin: center center;
+  }
+  .bubble {
+    max-width: 250px;
+    font-size: 11.5px;
+    padding: 8px 14px;
+    bottom: calc(100% + 46px);
+  }
+  .card {
+    padding: 24px 18px 24px;
+    border-radius: 20px;
+  }
+  .card .field {
+    height: 46px;
+    margin-bottom: 11px;
+  }
+  .card .btn {
+    height: 48px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
