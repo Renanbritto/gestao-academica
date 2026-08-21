@@ -5,21 +5,134 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Direito Monalysa Delvivo Rocha</title>
   
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mona Acadêmica">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase CDN JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Config -->
+  <script src="supabase-config.js"></script>
 </head>
 <body>
 
+  <!-- TELA INICIAL DE LOGIN INTERATIVO COM ROBÔ VOLT -->
+  <div class="scene" id="login-scene">
+    <main class="stage" id="stage">
+
+      <!-- ROBOT VOLT -->
+      <div class="robot" id="robot" data-mood="idle">
+        <div class="bubble" id="bubble" role="status" aria-live="polite">
+          <span id="bubbleText">Oi! Eu sou o Volt. Eu protejo o seu painel.</span>
+        </div>
+
+        <div class="antenna" aria-hidden="true">
+          <span class="antenna-rod"></span>
+          <span class="antenna-tip"></span>
+        </div>
+
+        <div class="head3d" aria-hidden="true">
+          <div class="head" id="head">
+            <span class="ear ear--l"></span>
+            <span class="ear ear--r"></span>
+
+            <!-- front -->
+            <div class="face face--front">
+              <div class="visor">
+                <div class="eyes" id="eyes">
+                  <span class="eye eye--l"></span>
+                  <span class="eye eye--r"></span>
+                </div>
+                <span class="cheek cheek--l"></span>
+                <span class="cheek cheek--r"></span>
+                <span class="mouth"></span>
+              </div>
+            </div>
+
+            <!-- back -->
+            <div class="face face--back">
+              <div class="panel">
+                <span class="panel-lights"><i></i><i></i><i></i></span>
+                <div class="meter" id="meter">
+                  <i></i><i></i><i></i><i></i>
+                </div>
+                <p class="panel-label" id="panelLabel">SEM ESPIAR 🙈</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM CARD -->
+      <form class="card" id="form" novalidate>
+        <span class="hand hand--l" aria-hidden="true"></span>
+        <span class="hand hand--r" aria-hidden="true"></span>
+
+        <!-- SWITCH ENTRE ENTRAR E CADASTRAR -->
+        <div class="robot-auth-switch">
+          <button type="button" class="robot-switch-btn active" id="btn-mode-login" onclick="setRobotAuthMode('login')">Entrar</button>
+          <button type="button" class="robot-switch-btn" id="btn-mode-register" onclick="setRobotAuthMode('register')">Criar Conta</button>
+        </div>
+
+        <h1 class="title" id="robot-form-title">Beep boop. Quem vai entrar?</h1>
+
+        <label class="field" id="field-name-box" style="display: none;">
+          <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-3.9 0-8 2-8 5v1.5h16V19c0-3-4.1-5-8-5Z"/></svg>
+          <input id="name" type="text" placeholder="Seu nome" autocomplete="name" aria-label="Seu nome">
+        </label>
+
+        <label class="field">
+          <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm8 7.3L4.4 7h15.2L12 12.3ZM4 9.2V17h16V9.2l-8 5.3-8-5.3Z"/></svg>
+          <input id="email" type="email" placeholder="Seu e-mail" autocomplete="email" aria-label="Seu e-mail" required>
+        </label>
+
+        <label class="field">
+          <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 0 1 6 0v3H9Zm3 4a2 2 0 0 1 1 3.7V19h-2v-1.3a2 2 0 0 1 1-3.7Z"/></svg>
+          <input id="password" type="password" placeholder="Sua senha secreta" autocomplete="current-password" aria-label="Senha" required>
+          <button class="peek" id="togglePass" type="button" aria-label="Mostrar senha" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-5 0-9.3 3.1-11 7.5C2.7 16.9 7 20 12 20s9.3-3.1 11-7.5C21.3 8.1 17 5 12 5Zm0 12.5a5 5 0 1 1 5-5 5 5 0 0 1-5 5Zm0-8a3 3 0 1 0 3 3 3 3 0 0 0-3-3Z"/></svg>
+          </button>
+        </label>
+
+        <button class="btn" id="loginBtn" type="submit">
+          <span class="btn-bolt" aria-hidden="true">⚡</span>
+          <span class="btn-label" id="btnLabel">ENTRAR NO PAINEL</span>
+        </button>
+
+        <span class="foot foot--l" aria-hidden="true"></span>
+        <span class="foot foot--r" aria-hidden="true"></span>
+
+        <!-- LINK PARA MODO CONVIDADO/DEMO OU CONFIGURAÇÃO -->
+        <div style="margin-top: 18px; text-align: center; display: flex; justify-content: space-between; font-size: 11.5px;">
+          <a href="javascript:void(0)" onclick="continueAsGuest()" style="color: var(--muted); text-decoration: underline;">
+            Entrar como visitante (Local)
+          </a>
+          <a href="javascript:void(0)" onclick="openSupabaseSettingsModal()" style="color: var(--muted); text-decoration: underline;">
+            ⚙️ Configurar Nuvem
+          </a>
+        </div>
+      </form>
+    </main>
+  </div>
+
   <!-- TOP HEADER BANNER (LAYOUT BASEADO NO DESENHO) -->
-  <header>
+  <header id="main-header">
     <div class="header-user-info">
       <div class="avatar" id="display-avatar-box">
         <i class="fa-solid fa-graduation-cap"></i>
@@ -32,10 +145,17 @@
     </div>
 
     <div class="header-actions">
+      <!-- BOTÃO / STATUS DE SINCRONIZAÇÃO EM NUVEM -->
+      <button class="auth-pill-btn" id="header-auth-btn" onclick="handleAuthButtonClick()" title="Status da Nuvem e Login">
+        <i class="fa-solid fa-cloud" id="header-auth-icon"></i>
+        <span id="header-auth-text">Conectar Nuvem</span>
+      </button>
+
       <div class="romantic-pill">
         <i class="fa-solid fa-heart"></i>
         <span id="display-romantic-note">Bem vinda ao seu painel da facul, boa volta as aulas! ❤️</span>
       </div>
+      
       <button class="theme-toggle-btn" onclick="toggleTheme()" title="Alternar Modo Claro / Escuro">
         <i class="fa-solid fa-moon" id="theme-icon"></i>
       </button>
@@ -43,7 +163,7 @@
   </header>
 
   <!-- APP CONTAINER -->
-  <div class="app-container">
+  <div class="app-container" id="main-app-container">
     
     <!-- SIDEBAR NAVIGATION (MENU DA IMAGEM) -->
     <aside>
@@ -71,9 +191,9 @@
           <i class="fa-solid fa-circle-half-stroke"></i>
           <span>Modo Claro / Escuro</span>
         </a>
-        <a class="menu-item" style="color: var(--accent-danger);" onclick="alert('Seus dados estão salvos com carinho no seu navegador!')">
-          <i class="fa-solid fa-shield-halved"></i>
-          <span>Dados Salvos (Local)</span>
+        <a class="menu-item" id="sidebar-cloud-status-btn" onclick="handleAuthButtonClick()">
+          <i class="fa-solid fa-cloud" id="sidebar-cloud-icon" style="color: var(--accent-warning);"></i>
+          <span id="sidebar-cloud-text">Modo Local (Offline)</span>
         </a>
       </div>
     </aside>
@@ -135,7 +255,7 @@
           </div>
         </div>
 
-        <!-- SEMÁFORO DE RENDIMENTO POR MATÉRIA (NOVO RECURSO SOLICITADO) -->
+        <!-- SEMÁFORO DE RENDIMENTO POR MATÉRIA -->
         <div class="glass" style="padding: 24px; margin-bottom: 28px;">
           <div class="card-title">
             <i class="fa-solid fa-traffic-light" style="color: var(--accent-warning);"></i>
@@ -178,17 +298,17 @@
 
               <div class="form-group">
                 <label>Meta Desejada (pts)</label>
-                <input type="number" class="form-control" value="85" step="5" min="0" max="100" id="calc-target-input" oninput="calculateTargetScore()">
+                <input type="number" class="form-control" id="calc-target-input" value="85" step="5" min="0" max="100" oninput="calculateTargetScore()">
               </div>
 
               <div class="form-group">
                 <label>Pontuação Atual Obtida (pts)</label>
-                <input type="number" class="form-control" value="50" step="5" min="0" max="100" id="calc-current-input" oninput="calculateTargetScore()">
+                <input type="number" class="form-control" id="calc-current-input" value="50" step="5" min="0" max="100" oninput="calculateTargetScore()">
               </div>
 
               <div class="form-group">
                 <label>Peso da Próxima Prova (%)</label>
-                <input type="number" class="form-control" value="40" step="5" min="5" max="100" id="calc-weight-input" oninput="calculateTargetScore()">
+                <input type="number" class="form-control" id="calc-weight-input" value="40" step="5" min="5" max="100" oninput="calculateTargetScore()">
               </div>
 
               <div class="calc-result-box">
@@ -275,7 +395,7 @@
                   <label>Cor de Identificação</label>
                   <input type="color" class="form-control" id="sub-color-input" value="#6366f1" style="height: 44px; padding: 4px; cursor: pointer;">
                 </div>
-                <button type="submit" class="btn-primary" style="width: 100%;">
+                <button type="submit" class="btn-primary" id="btn-save-subject" style="width: 100%;">
                   <i class="fa-solid fa-floppy-disk"></i> Salvar Matéria
                 </button>
               </form>
@@ -346,7 +466,7 @@
               <label>Observações / Conteúdo da Prova</label>
               <textarea class="form-control" id="act-notes-input" rows="3" placeholder="Detalhes do conteúdo ou requisitos..."></textarea>
             </div>
-            <button type="submit" class="btn-primary" style="width: 100%;">
+            <button type="submit" class="btn-primary" id="btn-save-activity" style="width: 100%;">
               <i class="fa-solid fa-plus"></i> Cadastrar Atividade
             </button>
           </form>
@@ -370,7 +490,7 @@
       <section id="tab-perfil" class="tab-content">
         <div class="dashboard-header">
           <h1>Configuração do Perfil ⚙️</h1>
-          <p style="color: var(--text-muted); font-size: 0.95rem;">Atualize seu perfil!.</p>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Atualize seus dados, metas e sincronização na nuvem.</p>
         </div>
 
         <div class="glass" style="padding: 28px; max-width: 680px;">
@@ -419,14 +539,71 @@
               <input type="text" class="form-control" id="input-note" required>
             </div>
 
-            <button type="submit" class="btn-primary" style="width: 100%;">
+            <button type="submit" class="btn-primary" id="btn-save-profile" style="width: 100%; margin-bottom: 24px;">
               <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações
             </button>
           </form>
+
+          <!-- SEÇÃO DE SINCRONIZAÇÃO EM NUVEM NO PERFIL -->
+          <div class="cloud-status-card" id="profile-cloud-section">
+            <div class="cloud-status-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-cloud-bolt" style="font-size: 1.3rem; color: var(--accent-primary);"></i>
+                <div>
+                  <div style="font-weight: 700; font-size: 0.95rem;">Sincronização Multi-Dispositivo (Nuvem)</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);" id="profile-cloud-status-text">Verificando status de conexão...</div>
+                </div>
+              </div>
+              <button class="btn-secondary" style="font-size: 0.82rem; padding: 6px 14px;" onclick="openSupabaseSettingsModal()">
+                <i class="fa-solid fa-gear"></i> Configurar Chaves
+              </button>
+            </div>
+            <div id="profile-auth-actions" style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
         </div>
       </section>
 
     </main>
+  </div>
+
+  <!-- MODAL DE CONFIGURAÇÃO DE CHAVES DO SUPABASE -->
+  <div id="supabase-settings-modal-overlay" class="modal-overlay" style="display: none;">
+    <div class="glass modal-box" style="max-width: 540px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <i class="fa-solid fa-database" style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+          <h3>Configurar Nuvem (Supabase)</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeSupabaseSettingsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+          Cole abaixo as credenciais do seu projeto gratuito do <strong>Supabase</strong> (obtidas em <em>Project Settings > API</em>):
+        </p>
+
+        <form onsubmit="handleSaveSupabaseSettings(event)">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label>Project URL (URL do Projeto)</label>
+            <input type="url" class="form-control" id="input-supabase-url" placeholder="https://xyz.supabase.co" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>Anon Public Key (Chave Pública Anon)</label>
+            <input type="password" class="form-control" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-primary" style="flex: 1;">
+              <i class="fa-solid fa-check"></i> Salvar e Conectar
+            </button>
+            <button type="button" class="btn-danger" onclick="handleClearSupabaseSettings()" title="Limpar Configurações">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <!-- CUSTOM GLASSMORPHISM MODAL DIALOG -->
