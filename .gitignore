@@ -1,0 +1,45 @@
+# .NET / C#
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+_ReSharper*/
+*.suo
+*.userprefs
+*.pidb
+*.booproj
+*.svclog
+*.Publish.xml
+*.azurePubxml
+*.pubxml
+appsettings.local.json
+appsettings.Secrets.json
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env*.local
+.env
+*.tsbuildinfo
+next-env.d.ts
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*~
+
+# Supabase / DB secrets
+.env.production
+.env.local
