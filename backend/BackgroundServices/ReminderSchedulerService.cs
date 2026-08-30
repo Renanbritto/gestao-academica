@@ -19,7 +19,10 @@ public class ReminderSchedulerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("ReminderSchedulerService iniciado.");
+        _logger.LogInformation("ReminderSchedulerService (Lembretes Telegram) iniciado.");
+
+        // Aguarda 10 segundos na inicialização para a API subir primeiro
+        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -29,7 +32,7 @@ public class ReminderSchedulerService : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro no ciclo de verificação do ReminderSchedulerService");
+                _logger.LogWarning("Não foi possível conectar ao banco de dados para checar lembretes ({Message}). Configure sua ConnectionString no appsettings.json.", ex.Message);
             }
 
             // Executa a cada 1 hora
