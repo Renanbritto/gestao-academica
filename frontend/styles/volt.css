@@ -1,0 +1,234 @@
+/* =============================================================================
+   ROBÔ VOLT 3D INTERATIVO (ANIMAÇÕES E VISOR)
+   ============================================================================= */
+
+.robot-stage {
+  perspective: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.robot-box {
+  position: relative;
+  width: 140px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* Bubble de fala */
+.robot-bubble {
+  position: absolute;
+  top: -46px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(12px);
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  animation: floatBubble 3s ease-in-out infinite;
+  z-index: 10;
+}
+
+.robot-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: var(--card-bg) transparent;
+  display: block;
+  width: 0;
+}
+
+@keyframes floatBubble {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Antena */
+.robot-antenna {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 22px;
+}
+
+.antenna-tip {
+  width: 10px;
+  height: 10px;
+  background: #6366f1;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #6366f1, 0 0 20px #818cf8;
+  animation: antennaPulse 2s infinite;
+}
+
+.antenna-rod {
+  width: 3px;
+  height: 14px;
+  background: #94a3b8;
+}
+
+@keyframes antennaPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 16px #6366f1; }
+}
+
+/* Cabeça 3D */
+.robot-head3d {
+  width: 110px;
+  height: 80px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.robot-box[data-mood="shy"] .robot-head3d {
+  transform: rotateY(180deg);
+}
+
+.robot-box[data-mood="happy"] .robot-head3d {
+  animation: headNod 0.6s ease-in-out;
+}
+
+@keyframes headNod {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-8deg) scale(1.05); }
+  70% { transform: rotate(8deg) scale(1.05); }
+}
+
+.robot-head {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 2px 6px rgba(255,255,255,0.2), 0 10px 25px rgba(0,0,0,0.35);
+}
+
+.face--front {
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+}
+
+.face--back {
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.ear {
+  position: absolute;
+  top: 24px;
+  width: 8px;
+  height: 28px;
+  background: #6366f1;
+  border-radius: 4px;
+}
+
+.ear--l { left: -7px; }
+.ear--r { right: -7px; }
+
+/* Visor frontal */
+.visor {
+  width: 82px;
+  height: 48px;
+  background: #020617;
+  border-radius: 12px;
+  border: 1.5px solid rgba(99, 102, 241, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+.visor-eyes {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.eye {
+  width: 12px;
+  height: 12px;
+  background: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #38bdf8, 0 0 16px #0284c7;
+  transition: all 0.2s ease;
+}
+
+.robot-box[data-mood="happy"] .eye {
+  border-radius: 0 0 12px 12px;
+  height: 8px;
+  background: #4ade80;
+  box-shadow: 0 0 10px #4ade80;
+}
+
+.robot-box[data-mood="blink"] .eye {
+  height: 2px;
+  border-radius: 1px;
+}
+
+.mouth {
+  width: 16px;
+  height: 4px;
+  background: #38bdf8;
+  border-radius: 2px;
+  margin-top: 6px;
+  opacity: 0.7;
+}
+
+/* Painel traseiro (quando a senha está oculta / modo tímido) */
+.back-meter {
+  display: flex;
+  gap: 4px;
+}
+
+.back-meter i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ec4899;
+  box-shadow: 0 0 6px #ec4899;
+  animation: meterBlink 1.2s infinite alternate;
+}
+
+@keyframes meterBlink {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+.back-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #f43f5e;
+  letter-spacing: 0.5px;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Ló — Gestão Acadêmica Inteligente",
+  "short_name": "Ló",
+  "description": "Seu painel acadêmico mobile first com assistente do Telegram e Gemini IA",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
