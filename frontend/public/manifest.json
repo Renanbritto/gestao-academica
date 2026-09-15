@@ -1,0 +1,16 @@
+{
+  "name": "IO — Gestão Acadêmica Inteligente",
+  "short_name": "IO",
+  "description": "Seu painel acadêmico mobile first com assistente do Telegram e Gemini IA",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

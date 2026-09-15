@@ -425,12 +425,15 @@ function setRobotAuthMode(mode) {
   const titleEl = document.getElementById('robot-form-title');
   const btnLabel = document.getElementById('btnLabel');
 
+  const googleBtnLabel = document.getElementById('googleBtnLabel');
+
   if (mode === 'login') {
     if (btnLogin) btnLogin.classList.add('active');
     if (btnReg) btnReg.classList.remove('active');
     if (nameBox) nameBox.style.display = 'none';
     if (titleEl) titleEl.innerText = 'Beep boop. Quem vai entrar?';
     if (btnLabel) btnLabel.innerText = 'ENTRAR NO PAINEL';
+    if (googleBtnLabel) googleBtnLabel.innerText = 'Continuar com Google';
     say('Digite seu e-mail e senha cadastrados para entrar.');
   } else {
     if (btnLogin) btnLogin.classList.remove('active');
@@ -438,7 +441,39 @@ function setRobotAuthMode(mode) {
     if (nameBox) nameBox.style.display = 'flex';
     if (titleEl) titleEl.innerText = 'Criando seu novo acesso! ✨';
     if (btnLabel) btnLabel.innerText = 'CRIAR MINHA CONTA';
+    if (googleBtnLabel) googleBtnLabel.innerText = 'Cadastrar com Google';
     say('Informe seu nome, e-mail e crie uma senha.');
+  }
+}
+
+async function loginWithGoogle() {
+  const client = getSupabase();
+  if (!client) {
+    if (typeof showToast === 'function') showToast('Supabase não conectado.', 'warning');
+    return;
+  }
+
+  const sayFn = window.voltSay || say;
+  sayFn('Conectando com o Google... 🌐');
+
+  try {
+    const { data, error } = await client.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + window.location.pathname
+      }
+    });
+
+    if (error) throw error;
+  } catch (err) {
+    console.error('Erro Google OAuth:', err);
+    sayFn(`Ops: ${err.message || 'Erro ao conectar com Google.'}`);
+    const form = document.getElementById('form');
+    if (form) {
+      form.classList.remove('shake');
+      void form.offsetWidth;
+      form.classList.add('shake');
+    }
   }
 }
 
