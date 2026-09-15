@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Subject } from '@/lib/types';
-import { X, BookPlus, FloppyDisk, Palette } from 'lucide-react';
+import { X, BookPlus, Save, Palette } from 'lucide-react';
 
 interface SubjectModalProps {
   isOpen: boolean;
@@ -183,7 +183,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
               disabled={isSubmitting}
               className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-1.5"
             >
-              <FloppyDisk size={15} />
+              <Save size={15} />
               <span>{isSubmitting ? 'Salvando...' : 'Salvar Matéria'}</span>
             </button>
           </div>

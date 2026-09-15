@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { api } from '@/lib/api';
 import { Profile } from '@/lib/types';
+import { DEFAULT_PROFILE, seedGuestDataIfEmpty } from '@/lib/defaults';
 
 interface AuthContextType {
   user: User | null;
@@ -11,6 +12,7 @@ interface AuthContextType {
   isGuest: boolean;
   isLoading: boolean;
   signIn: (email: string, pass: string) => Promise<{ error?: string }>;
+  signInWithGoogle: () => Promise<{ error?: string }>;
   signUp: (email: string, pass: string, name: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   continueAsGuest: () => void;
@@ -18,18 +20,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const GUEST_PROFILE: Profile = {
-  id: 'guest-user-local',
-  name: 'Estudante Ló',
-  course: 'Direito',
-  period: '7º Período',
-  targetGpa: 85.0,
-  motivationNote: 'Bora conquistar esse semestre! 🚀',
-  theme: 'dark',
-  accentColor: '#6366f1',
-  updatedAt: new Date().toISOString()
-};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -42,7 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchProfile = async (currentUser: User) => {
     try {
-      // Tenta buscar via API C#
+      // 1. Tenta buscar via API C#
       const res = await api.get('/profile');
       if (res.data) {
         setProfile(res.data);
@@ -52,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.warn('API C# não respondeu, buscando via Supabase direto:', err);
     }
 
-    // Fallback Supabase direto
+    // 2. Fallback Supabase direto
     try {
       const { data } = await supabase
         .from('profiles')
@@ -63,19 +53,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data) {
         setProfile({
           id: data.id,
-          name: data.name || currentUser.user_metadata?.full_name || 'Estudante Ló',
-          course: data.course || '',
-          period: data.period || '',
-          targetGpa: Number(data.target_gpa) || 80.0,
-          motivationNote: data.motivation_note || 'Bora conquistar esse semestre! 🚀',
+          name: data.name || currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || 'Estudante IO',
+          course: data.course || 'Direito',
+          period: data.period || '7º Período',
+          targetGpa: Number(data.target_gpa) || 85.0,
+          motivationNote: data.motivation_note || data.love_note || 'Bora conquistar esse semestre! 🚀',
           theme: data.theme || 'dark',
           accentColor: data.accent_color || '#6366f1',
-          avatarDataUrl: data.avatar_data_url,
+          avatarDataUrl: data.avatar_data_url || currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture,
           updatedAt: data.updated_at
         });
+      } else {
+        // Se ainda não existe perfil no banco (ex: novo login Google ou trigger pendente), cria perfil inicial
+        const initialProfile: Profile = {
+          id: currentUser.id,
+          name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Estudante IO',
+          course: 'Direito',
+          period: '7º Período',
+          targetGpa: 85.0,
+          motivationNote: 'Bora conquistar esse semestre! 🚀',
+          theme: 'dark',
+          accentColor: '#6366f1',
+          avatarDataUrl: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture,
+          updatedAt: new Date().toISOString()
+        };
+
+        await supabase.from('profiles').upsert([
+          {
+            id: initialProfile.id,
+            name: initialProfile.name,
+            course: initialProfile.course,
+            period: initialProfile.period,
+            target_gpa: initialProfile.targetGpa,
+            love_note: initialProfile.motivationNote,
+            theme: initialProfile.theme,
+            avatar_data_url: initialProfile.avatarDataUrl
+          }
+        ]);
+
+        setProfile(initialProfile);
       }
     } catch (e) {
-      console.warn('Erro ao carregar perfil:', e);
+      console.warn('Erro ao carregar perfil, usando dados de fallback da sessão:', e);
+      setProfile({
+        id: currentUser.id,
+        name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Estudante IO',
+        course: 'Direito',
+        period: '7º Período',
+        targetGpa: 85.0,
+        motivationNote: 'Bora conquistar esse semestre! 🚀',
+        theme: 'dark',
+        accentColor: '#6366f1',
+        avatarDataUrl: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture,
+        updatedAt: new Date().toISOString()
+      });
     }
   };
 
@@ -84,7 +115,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedGuest = localStorage.getItem('lo_guest_mode');
     if (savedGuest === 'true') {
       setIsGuest(true);
-      setProfile(GUEST_PROFILE);
+      seedGuestDataIfEmpty();
+      setProfile(DEFAULT_PROFILE);
       setIsLoading(false);
       return;
     }
@@ -122,7 +154,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password: pass,
       });
 
-      if (error) return { error: error.message };
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          return { error: 'E-mail ou senha incorretos. Verifique os dados ou utilize o Login com Google.' };
+        }
+        if (error.message.includes('Email not confirmed')) {
+          return { error: 'Seu e-mail ainda não foi confirmado no Supabase. Experimente o login com Google!' };
+        }
+        return { error: error.message };
+      }
+
       if (data.user) {
         setUser(data.user);
         setSession(data.session);
@@ -133,6 +174,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return {};
     } catch (e: any) {
       return { error: e.message || 'Erro ao conectar.' };
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const redirectTo = typeof window !== 'undefined'
+        ? `${window.location.origin}/dashboard`
+        : undefined;
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          }
+        }
+      });
+
+      if (error) {
+        if (error.message.toLowerCase().includes('not enabled') || error.message.toLowerCase().includes('unsupported')) {
+          return {
+            error: 'O provedor Google ainda precisa ser ativado no painel do Supabase (Authentication > Providers > Google).'
+          };
+        }
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (e: any) {
+      return { error: e.message || 'Erro ao iniciar autenticação com o Google.' };
     }
   };
 
@@ -171,7 +244,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const continueAsGuest = () => {
     setIsGuest(true);
     localStorage.setItem('lo_guest_mode', 'true');
-    setProfile(GUEST_PROFILE);
+    seedGuestDataIfEmpty();
+    setProfile(DEFAULT_PROFILE);
     setUser(null);
   };
 
@@ -188,6 +262,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isGuest,
         isLoading,
         signIn,
+        signInWithGoogle,
         signUp,
         signOut,
         continueAsGuest,

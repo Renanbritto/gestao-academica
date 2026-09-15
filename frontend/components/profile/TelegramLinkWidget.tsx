@@ -64,7 +64,7 @@ export const TelegramLinkWidget: React.FC = () => {
           </div>
           <div>
             <h4 className="font-display font-bold text-sm text-[var(--text-main)] flex items-center gap-1.5">
-              <span>Ló no Telegram com Gemini IA</span>
+              <span>IO no Telegram com Gemini IA</span>
               <Sparkles size={14} className="text-pink-400" />
             </h4>
             <p className="text-xs text-[var(--text-muted)]">

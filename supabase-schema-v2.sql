@@ -1,14 +1,14 @@
 -- =============================================================================
--- ESQUEMA DE BANCO DE DADOS - PLATAFORMA LÓ (SUPABASE / POSTGRESQL)
+-- ESQUEMA DE BANCO DE DADOS - PLATAFORMA IO (SUPABASE / POSTGRESQL)
 -- =============================================================================
--- Este script atualiza a base existente e cria as novas tabelas para o Ló.
+-- Este script atualiza a base existente e cria as novas tabelas para o IO.
 -- Pode ser executado com segurança no SQL Editor do Supabase.
 -- =============================================================================
 
 -- 1. TABELA DE PERFIS (profiles)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  name TEXT NOT NULL DEFAULT 'Estudante Ló',
+  name TEXT NOT NULL DEFAULT 'Estudante IO',
   course TEXT DEFAULT '',
   period TEXT DEFAULT '',
   target_gpa NUMERIC(5,2) DEFAULT 80.0,
@@ -168,7 +168,7 @@ BEGIN
   INSERT INTO public.profiles (id, name, course, period, target_gpa, motivation_note, theme, accent_color)
   VALUES (
     new.id, 
-    COALESCE(new.raw_user_meta_data->>'full_name', 'Estudante Ló'),
+    COALESCE(new.raw_user_meta_data->>'full_name', 'Estudante IO'),
     COALESCE(new.raw_user_meta_data->>'course', ''),
     COALESCE(new.raw_user_meta_data->>'period', ''),
     80.0,

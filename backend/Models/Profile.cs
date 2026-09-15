@@ -12,7 +12,7 @@ public class Profile
 
     [Column("name")]
     [MaxLength(200)]
-    public string Name { get; set; } = "Estudante Ló";
+    public string Name { get; set; } = "Estudante IO";
 
     [Column("course")]
     [MaxLength(200)]

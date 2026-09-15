@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api';
 import { getSupabase } from '@/lib/supabase';
 import { DashboardData, Subject, Activity } from '@/lib/types';
-import { Award, BookOpen, Clock, CalendarCheck, TrendingUp, Sparkles, Bot, AlertCircle } from 'lucide-react';
+import { Award, BookOpen, Clock, CalendarCheck, TrendingUp, Sparkles, Bot, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
@@ -49,7 +49,6 @@ export default function DashboardPage() {
         subs = sData || [];
         acts = aData || [];
       } else {
-        // Fallback local
         const rawSubs = localStorage.getItem('academic_subjects_v6');
         const rawActs = localStorage.getItem('academic_activities_v6');
         subs = rawSubs ? JSON.parse(rawSubs) : [];
@@ -58,7 +57,6 @@ export default function DashboardPage() {
 
       setSubjects(subs);
 
-      // Calcula métricas manualmente se API offline
       const targetGpa = profile?.targetGpa || 80.0;
       const today = new Date().toISOString().split('T')[0];
 
@@ -145,55 +143,65 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 max-w-6xl mx-auto animate-fade-in">
+      <div className="space-y-6 w-full animate-fade-in">
         
         {/* Cabeçalho do Dashboard */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-display font-black text-[var(--text-main)] tracking-tight">
               Dashboard de Rendimento 📈
             </h1>
-            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-0.5">
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
               Escala de 0 a 100 pontos • Mínimo para Aprovação: <strong className="text-[var(--text-main)]">70 Pontos</strong>
             </p>
           </div>
 
-          <Link
-            href="/activities?action=new"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all sm:self-start"
-          >
-            <Sparkles size={15} />
-            <span>+ Nova Prova / Atividade</span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/profile?tab=telegram"
+              className="hidden lg:inline-flex items-center gap-2 px-3.5 py-2.5 rounded-2xl glass hover:border-sky-500/40 text-sky-400 text-xs font-bold transition-all hover:scale-105"
+            >
+              <Bot size={16} />
+              <span>Telegram com Gemini IA</span>
+            </Link>
+
+            <Link
+              href="/activities?action=new"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white text-xs font-bold shadow-[0_0_20px_rgba(99,102,241,0.35)] transition-all hover:scale-105 active:scale-95"
+            >
+              <Plus size={16} />
+              <span>Nova Prova / Atividade</span>
+            </Link>
+          </div>
         </div>
 
-        {/* Banner do Bot Telegram com Gemini */}
-        <div className="glass p-4 sm:p-5 rounded-3xl border border-indigo-500/30 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        {/* Banner do Bot Telegram (Apenas no Mobile/Tablet ou sutil) */}
+        <div className="lg:hidden glass p-4 rounded-3xl border border-indigo-500/30 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-400 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20 flex-shrink-0">
-              <Bot size={24} />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-400 to-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+              <Bot size={20} />
             </div>
             <div>
-              <h3 className="font-display font-bold text-sm text-[var(--text-main)] flex items-center gap-1.5">
-                <span>Conecte o Ló no seu Telegram</span>
+              <h3 className="font-display font-bold text-xs text-[var(--text-main)] flex items-center gap-1.5">
+                <span>Conecte o IO no Telegram</span>
                 <span className="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 text-[10px] font-bold">Com Gemini IA</span>
               </h3>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                Receba lembretes automáticos de provas e tire dúvidas de matérias diretamente no chat.
+              <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
+                Receba lembretes automáticos e tire dúvidas de matérias.
               </p>
             </div>
           </div>
 
           <Link
             href="/profile?tab=telegram"
-            className="px-4 py-2 rounded-xl bg-card border border-card-border hover:border-indigo-500 text-xs font-bold text-[var(--text-main)] transition-colors flex-shrink-0"
+            className="px-3.5 py-1.5 rounded-xl bg-card border border-card-border hover:border-indigo-500 text-xs font-bold text-[var(--text-main)] transition-colors flex-shrink-0 self-end sm:self-center"
           >
-            Vincular Telegram
+            Vincular
           </Link>
         </div>
 
-        {/* Grid de 4 Métricas Principais (Mobile First: 1 col → sm: 2 cols → lg: 4 cols) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Grid de 4 Métricas Principais (Widescreen Fluid: 1 col → sm: 2 cols → xl: 4 cols) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
           <MetricCard
             title="Média Geral (CR)"
             value={`${dashboardData?.generalAverage.toFixed(1) || '0.0'} pts`}
@@ -234,18 +242,18 @@ export default function DashboardPage() {
         </div>
 
         {/* Semáforo de Rendimento por Matéria */}
-        <div className="glass p-5 sm:p-6 rounded-3xl space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+        <div className="glass p-5 sm:p-7 rounded-3xl space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pb-2 border-b border-[var(--glass-border)]">
             <div>
               <h3 className="text-base sm:text-lg font-display font-bold text-[var(--text-main)] flex items-center gap-2">
                 <span>🚦 Semáforo de Rendimento & Pontos Faltantes</span>
               </h3>
-              <p className="text-xs text-[var(--text-muted)]">
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">
                 Acompanhamento para os <strong>70 pontos de aprovação</strong> e a meta pessoal.
               </p>
             </div>
-            <span className="text-[11px] font-semibold text-indigo-400">
-              Escala 0 a 100 pts
+            <span className="text-[11px] font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 self-start sm:self-center">
+              Mínimo para passar: 70 pts
             </span>
           </div>
 
@@ -256,16 +264,16 @@ export default function DashboardPage() {
         </div>
 
         {/* Gráfico de Pontuação & Calculadora de Meta */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
           
           {/* Gráfico de Barras */}
-          <div className="glass p-5 sm:p-6 rounded-3xl space-y-4">
-            <div>
+          <div className="glass p-5 sm:p-7 rounded-3xl space-y-4">
+            <div className="pb-2 border-b border-[var(--glass-border)]">
               <h3 className="text-base font-display font-bold text-[var(--text-main)] flex items-center gap-2">
                 <TrendingUp size={18} className="text-indigo-400" />
-                <span>Pontuação Atual por Matéria</span>
+                <span>Pontuação Atual por Disciplina</span>
               </h3>
-              <p className="text-xs text-[var(--text-muted)]">
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">
                 Progresso acumulado nas avaliações já realizadas.
               </p>
             </div>
@@ -274,13 +282,13 @@ export default function DashboardPage() {
           </div>
 
           {/* Calculadora de Meta */}
-          <div className="glass p-5 sm:p-6 rounded-3xl space-y-4">
-            <div>
+          <div className="glass p-5 sm:p-7 rounded-3xl space-y-4">
+            <div className="pb-2 border-b border-[var(--glass-border)]">
               <h3 className="text-base font-display font-bold text-[var(--text-main)] flex items-center gap-2">
                 <Sparkles size={18} className="text-pink-400" />
                 <span>Calculadora de Meta Inteligente</span>
               </h3>
-              <p className="text-xs text-[var(--text-muted)]">
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">
                 Descubra quanto precisa tirar na próxima avaliação.
               </p>
             </div>

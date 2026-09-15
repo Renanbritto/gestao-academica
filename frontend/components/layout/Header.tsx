@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Moon, Sun, Bell, User, CloudOff, Sparkles } from 'lucide-react';
+import { Moon, Sun, Bell, User, CloudOff } from 'lucide-react';
 import Link from 'next/link';
 
 export const Header: React.FC = () => {
@@ -10,17 +10,19 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-2xl border-b border-[var(--glass-border)] bg-[var(--header-glass)] px-4 py-3 sm:px-6 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-[1700px] mx-auto flex items-center justify-between">
         
-        {/* Lado Esquerdo: Identidade do Aluno / Logo Ló */}
+        {/* Lado Esquerdo: Identidade do Aluno / Logo IO */}
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.4)] group-hover:scale-105 transition-all border border-white/20">
-              <span className="font-display font-black text-lg tracking-wider">Ló</span>
-            </div>
+            <img
+              src="/logo.png"
+              alt="IO Acadêmico"
+              className="w-10 h-10 rounded-2xl object-cover shadow-[0_0_25px_rgba(99,102,241,0.5)] group-hover:scale-105 transition-all border border-white/20"
+            />
             <div className="hidden sm:block">
               <span className="font-display font-bold text-base block leading-tight text-[var(--text-main)]">
-                Ló Acadêmico
+                IO Acadêmico
               </span>
               <span className="text-xs text-[var(--text-muted)] font-medium">
                 {profile?.course ? `${profile.course} • ${profile.period || ''}` : 'Gestão Universitária'}
@@ -31,8 +33,7 @@ export const Header: React.FC = () => {
 
         {/* Mensagem Motivacional no Topo (Glass Capsule) */}
         {profile?.motivationNote && (
-          <div className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full glass-pill text-xs font-semibold text-[var(--text-main)] border border-indigo-500/30 max-w-md truncate shadow-sm">
-            <Sparkles size={14} className="text-pink-400 flex-shrink-0 animate-pulse" />
+          <div className="hidden md:flex items-center px-4 py-1.5 rounded-full glass-pill text-xs font-semibold text-[var(--text-main)] border border-indigo-500/30 max-w-md truncate shadow-sm">
             <span className="truncate">{profile.motivationNote}</span>
           </div>
         )}

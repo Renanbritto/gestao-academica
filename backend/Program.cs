@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -7,17 +8,28 @@ using Lo.Backend.BackgroundServices;
 using Lo.Backend.Data;
 using Lo.Backend.Services;
 
+// Força resolução DNS via IPv4 (evita timeout IPv6 em redes brasileiras)
+AppContext.SetSwitch("System.Net.DisableIPv6", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configuração do Banco de Dados PostgreSQL (Supabase / Railway)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                    ?? Environment.GetEnvironmentVariable("DATABASE_URL");
+// Suporte a arquivo de credenciais locais (ignorado no Git) e variáveis de ambiente
+var localJsonPath = Path.Combine(builder.Environment.ContentRootPath, "appsettings.local.json");
+builder.Configuration
+    .AddJsonFile(localJsonPath, optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
-// Trata formato postgres:// (comum no Railway) se necessário
-if (!string.IsNullOrWhiteSpace(connectionString) && connectionString.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
-{
-    connectionString = ConvertPostgreSqlUriToNpgsql(connectionString);
-}
+// 1. Configuração do Banco de Dados PostgreSQL (Supabase / Railway)
+var rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? Environment.GetEnvironmentVariable("DATABASE_URL")
+                       ?? string.Empty;
+
+var connectionString = ParsePostgreSqlConnectionString(rawConnectionString);
+
+// Informa no console qual host está sendo utilizado
+var hostInfo = connectionString.Split(';')
+    .FirstOrDefault(s => s.StartsWith("Host=", StringComparison.OrdinalIgnoreCase)) ?? "Configurado";
+Console.WriteLine($"[IO Database] {hostInfo}");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -50,51 +62,33 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// 3. Configuração de CORS (Permite Vercel e Localhost)
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.SetIsOriginAllowed(origin =>
-        {
-            var uri = new Uri(origin);
-            return uri.Host == "localhost"
-                || uri.Host.EndsWith("vercel.app", StringComparison.OrdinalIgnoreCase)
-                || uri.Host == "127.0.0.1";
-        })
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
-    });
-});
-
-// 4. Injeção de Dependências dos Serviços
-builder.Services.AddHttpClient();
+// 3. Injeção de Dependências (Serviços e Clientes HTTP)
+builder.Services.AddHttpClient<IGeminiService, GeminiService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
 
-// 5. Background Services
+// Background Service para Lembretes Proativos no Telegram
 builder.Services.AddHostedService<ReminderSchedulerService>();
 
-// 6. Controllers e Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// 4. Configuração Swagger com suporte a Bearer Token JWT
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Ló Acadêmico API",
+        Title = "IO Acadêmico API",
         Version = "v1",
-        Description = "API REST de Gestão Acadêmica & Bot Telegram com Gemini AI para a plataforma Ló"
+        Description = "Backend em C# ASP.NET Core 8 para Gestão Acadêmica, Telegram Bot e Gemini IA."
     });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "Insira o token JWT do Supabase no formato: Bearer {token}",
+        Description = "Insira o token JWT do Supabase: Bearer {seu_token}",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -117,15 +111,30 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// 5. Configuração de CORS (Next.js Frontend & Vercel)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+                      ?? new[] { "http://localhost:3000", "http://localhost:5173" };
+
+        policy.SetIsOriginAllowed(origin => true) // Flexível para desenvolvimento e Vercel previews
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
-// Pipeline de Middleware HTTP
-if (app.Environment.IsDevelopment() || true) // Ativa Swagger para teste no Railway
+// Configuração do Pipeline HTTP
+if (app.Environment.IsDevelopment() || true) // Habilita Swagger no Railway para documentação
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ló Acadêmico API v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "IO Acadêmico API v1");
         c.RoutePrefix = string.Empty; // Swagger na raiz da API
     });
 }
@@ -142,15 +151,86 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy", app = "Lo.Backe
 
 app.Run();
 
-// Helper para converter connection string no formato URI para Npgsql
-static string ConvertPostgreSqlUriToNpgsql(string uriString)
+// Parser robusto para qualquer formato de Connection String (URI postgresql:// ou Chave-Valor)
+static string ParsePostgreSqlConnectionString(string raw)
 {
-    var uri = new Uri(uriString);
-    var userInfo = uri.UserInfo.Split(':');
-    var username = userInfo.Length > 0 ? userInfo[0] : "";
-    var password = userInfo.Length > 1 ? userInfo[1] : "";
-    var port = uri.Port > 0 ? uri.Port : 5432;
-    var database = uri.AbsolutePath.TrimStart('/');
+    if (string.IsNullOrWhiteSpace(raw)) return raw;
 
-    return $"Host={uri.Host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+    string trimmed = raw.Trim().Trim('"', '\'');
+
+    // Se já estiver no formato chave-valor (ex: Host=...;Database=...), retorna direto
+    if (trimmed.Contains("Host=", StringComparison.OrdinalIgnoreCase) ||
+        trimmed.Contains("Server=", StringComparison.OrdinalIgnoreCase))
+    {
+        return trimmed;
+    }
+
+    // Se estiver no formato URI (postgresql:// ou postgres://)
+    if (trimmed.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) ||
+        trimmed.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
+    {
+        try
+        {
+            // Remove o prefixo
+            int prefixLen = trimmed.IndexOf("://", StringComparison.OrdinalIgnoreCase) + 3;
+            string withoutPrefix = trimmed.Substring(prefixLen);
+
+            // Localiza o último '@' que separa [user:password] de [host:port/database]
+            int atIndex = withoutPrefix.LastIndexOf('@');
+            if (atIndex == -1) return trimmed;
+
+            string authPart = withoutPrefix.Substring(0, atIndex);
+            string hostDbPart = withoutPrefix.Substring(atIndex + 1);
+
+            // Separa usuário e senha no authPart
+            string username = "postgres";
+            string password = "";
+            int colonIndex = authPart.IndexOf(':');
+            if (colonIndex != -1)
+            {
+                username = Uri.UnescapeDataString(authPart.Substring(0, colonIndex));
+                password = Uri.UnescapeDataString(authPart.Substring(colonIndex + 1));
+            }
+            else
+            {
+                username = Uri.UnescapeDataString(authPart);
+            }
+
+            // Separa host[:port] e database
+            string host = hostDbPart;
+            string port = "5432";
+            string database = "postgres";
+
+            int slashIndex = hostDbPart.IndexOf('/');
+            if (slashIndex != -1)
+            {
+                host = hostDbPart.Substring(0, slashIndex);
+                database = hostDbPart.Substring(slashIndex + 1);
+                // Remove query strings se houver
+                int qIndex = database.IndexOf('?');
+                if (qIndex != -1) database = database.Substring(0, qIndex);
+                if (string.IsNullOrWhiteSpace(database)) database = "postgres";
+            }
+
+            int portColon = host.IndexOf(':');
+            if (portColon != -1)
+            {
+                port = host.Substring(portColon + 1);
+                host = host.Substring(0, portColon);
+            }
+
+            // Remove quaisquer caracteres estranhos do host (ex: !, @, espaços)
+            host = host.Trim('!', '@', '/', ' ', '\\', ':', ';');
+
+            return $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true;";
+        }
+        catch
+        {
+            return trimmed;
+        }
+    }
+
+    return trimmed;
 }
+
+public partial class Program { }

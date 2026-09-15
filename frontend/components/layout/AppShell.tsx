@@ -5,7 +5,7 @@ import { BottomNav } from './BottomNav';
 
 export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-background relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-background relative overflow-x-clip">
       
       {/* Orbs de Luz Neon Flutuantes para Efeito Glassmorphism de Alta Refração */}
       <div
@@ -26,14 +26,14 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       />
 
       {/* Header com Efeito Vidro Flutuante */}
-      <div className="z-40">
+      <div className="z-40 w-full">
         <Header />
       </div>
 
-      {/* Conteúdo Principal */}
-      <div className="flex-1 flex w-full max-w-7xl mx-auto z-10 relative">
+      {/* Conteúdo Principal com aproveitamento total da tela widescreen */}
+      <div className="flex-1 flex w-full max-w-[1700px] mx-auto relative">
         <Sidebar />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 mobile-safe-bottom overflow-x-hidden">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 mobile-safe-bottom min-w-0 z-10">
           {children}
         </main>
       </div>

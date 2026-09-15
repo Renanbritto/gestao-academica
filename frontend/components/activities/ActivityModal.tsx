@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Activity, Subject } from '@/lib/types';
-import { X, CalendarPlus, FloppyDisk } from 'lucide-react';
+import { X, CalendarPlus, Save } from 'lucide-react';
 
 interface ActivityModalProps {
   isOpen: boolean;
@@ -233,7 +233,7 @@ export const ActivityModal: React.FC<ActivityModalProps> = ({
               disabled={isSubmitting}
               className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-1.5"
             >
-              <FloppyDisk size={15} />
+              <Save size={15} />
               <span>{isSubmitting ? 'Salvando...' : 'Salvar Atividade'}</span>
             </button>
           </div>

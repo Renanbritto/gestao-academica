@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { api } from '@/lib/api';
 import { getSupabase } from '@/lib/supabase';
-import { User, Camera, Trash2, FloppyDisk, Moon, Sun, Palette, Sparkles, LogOut } from 'lucide-react';
+import { User, Camera, Trash2, Save, Moon, Sun, Palette, Sparkles, LogOut } from 'lucide-react';
 import { useRouter } from 'next/router';
 
 const ACCENT_COLORS = [
@@ -144,7 +144,7 @@ export default function ProfilePage() {
 
             <div className="space-y-1 text-center sm:text-left">
               <h3 className="font-display font-bold text-base text-[var(--text-main)]">
-                {name || 'Estudante Ló'}
+                {name || 'Estudante IO'}
               </h3>
               <p className="text-xs text-[var(--text-muted)]">
                 {course ? `${course} • ${period}` : 'Universitário'}
@@ -267,7 +267,7 @@ export default function ProfilePage() {
               disabled={isSaving}
               className="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
             >
-              <FloppyDisk size={16} />
+              <Save size={16} />
               <span>{isSaving ? 'Salvando...' : 'Salvar Alterações do Perfil'}</span>
             </button>
           </form>

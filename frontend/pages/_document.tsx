@@ -8,9 +8,10 @@ export default function Document() {
         <meta name="theme-color" content="#0f172a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Ló Acadêmico" />
+        <meta name="apple-mobile-web-app-title" content="IO Acadêmico" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         
         {/* Google Fonts: Plus Jakarta Sans & Sora */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

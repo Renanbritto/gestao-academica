@@ -36,7 +36,7 @@ public class ProfileService : IProfileService
             profile = new Profile
             {
                 Id = userId,
-                Name = string.IsNullOrWhiteSpace(request.Name) ? "Estudante Ló" : request.Name,
+                Name = string.IsNullOrWhiteSpace(request.Name) ? "Estudante IO" : request.Name,
                 Course = request.Course,
                 Period = request.Period,
                 TargetGpa = request.TargetGpa,
@@ -75,7 +75,7 @@ public class ProfileService : IProfileService
 
         var displayName = !string.IsNullOrWhiteSpace(fullName)
             ? fullName
-            : (!string.IsNullOrWhiteSpace(email) ? email.Split('@')[0] : "Estudante Ló");
+            : (!string.IsNullOrWhiteSpace(email) ? email.Split('@')[0] : "Estudante IO");
 
         profile = new Profile
         {

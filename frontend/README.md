@@ -1,6 +1,6 @@
-# 📱 Ló — Frontend Mobile First (Next.js 14 + Tailwind CSS)
+# 📱 IO — Frontend Mobile First (Next.js 14 + Tailwind CSS)
 
-Interface web e mobile moderna da plataforma de gestão acadêmica **Ló**, construída com **Next.js 14 (Pages Router)**, **Tailwind CSS**, componentes customizados com design Glassmorphism, **PWA** e o mascote animado **Robô Volt**.
+Interface web e mobile moderna da plataforma de gestão acadêmica **IO**, construída com **Next.js 14 (Pages Router)**, **Tailwind CSS**, componentes customizados com design Glassmorphism, **PWA** e o mascote animado **Robô Volt**.
 
 ---
 

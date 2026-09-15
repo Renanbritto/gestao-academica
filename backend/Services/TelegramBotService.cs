@@ -162,9 +162,9 @@ public class TelegramBotService : ITelegramBotService
             {
                 await client.SendTextMessageAsync(
                     chatId,
-                    "👋 Olá! Eu sou o **Ló**, seu assistente acadêmico com inteligência artificial.\n\n" +
+                    "👋 Olá! Eu sou o **IO**, seu assistente acadêmico com inteligência artificial.\n\n" +
                     "Para eu acessar suas matérias, notas e provas, você precisa vincular sua conta.\n\n" +
-                    "👉 Acesse a plataforma web do **Ló**, vá em **Perfil > Telegram**, gere seu código de vinculação e digite aqui:\n" +
+                    "👉 Acesse a plataforma web do **IO**, vá em **Perfil > Telegram**, gere seu código de vinculação e digite aqui:\n" +
                     "`/vincular CODIGO`\n\n" +
                     "Exemplo: `/vincular AB12CD`",
                     parseMode: ParseMode.Markdown
@@ -198,7 +198,7 @@ public class TelegramBotService : ITelegramBotService
             {
                 _context.TelegramLinks.Remove(link);
                 await _context.SaveChangesAsync();
-                await client.SendTextMessageAsync(chatId, "✅ Sua conta do Ló foi desvinculada deste Telegram. Até mais!");
+                await client.SendTextMessageAsync(chatId, "✅ Sua conta do IO foi desvinculada deste Telegram. Até mais!");
             }
             else
             {
@@ -266,7 +266,7 @@ public class TelegramBotService : ITelegramBotService
 
         await client.SendTextMessageAsync(
             chatId,
-            "🚀 *Bem-vindo ao Ló Acadêmico!*\n\n" +
+            "🚀 *Bem-vindo ao IO Acadêmico!*\n\n" +
             "Eu sou seu parceiro de estudos inteligente. Posso te lembrar de prazos, calcular notas e tirar dúvidas de matérias usando IA.\n\n" +
             "Para conectar sua conta, envie:\n" +
             "`/vincular SEU_CODIGO`\n\n" +
@@ -386,7 +386,7 @@ public class TelegramBotService : ITelegramBotService
         var dash = await _dashboardService.GetDashboardMetricsAsync(userId);
 
         var sb = new StringBuilder();
-        sb.AppendLine("📊 *Seu Rendimento Acadêmico no Ló:*\n");
+        sb.AppendLine("📊 *Seu Rendimento Acadêmico no IO:*\n");
         sb.AppendLine($"🏆 **Média Geral (CR):** `{dash.GeneralAverage:0.0} / 100 pts`");
         sb.AppendLine($"🎯 **Sua Meta Pessoal:** `{dash.TargetGpa:0.0} pts`");
         sb.AppendLine($"⚖️ **Mínimo de Aprovação:** `{dash.PassingGradeThreshold:0.0} pts`\n");
@@ -420,7 +420,7 @@ public class TelegramBotService : ITelegramBotService
         }
 
         var sb = new StringBuilder();
-        sb.AppendLine("🔔 *Central de Avisos Ló:*\n");
+        sb.AppendLine("🔔 *Central de Avisos IO:*\n");
 
         foreach (var act in pending)
         {
@@ -484,7 +484,7 @@ public class TelegramBotService : ITelegramBotService
     {
         await client.SendTextMessageAsync(
             chatId,
-            "💡 *Comandos do Ló Acadêmico:*\n\n" +
+            "💡 *Comandos do IO Acadêmico:*\n\n" +
             "📝 `/provas` — Lista próximas provas e datas\n" +
             "📊 `/notas` — Exibe sua média geral (CR) e notas\n" +
             "🔔 `/avisos` — Alertas de atividades pendentes com semáforo\n" +
