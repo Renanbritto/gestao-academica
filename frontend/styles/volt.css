@@ -468,6 +468,7 @@
 .robot-card .field input {
   flex: 1;
   min-width: 0;
+  height: 100%;
   border: none;
   outline: none;
   background: transparent;
@@ -477,6 +478,54 @@
   color: var(--text-main);
 }
 .robot-card .field input::placeholder { color: var(--text-muted); font-weight: 500; }
+
+/* Eliminacao da tarja branca de autofill do Chrome/Edge/Safari */
+.robot-card .field:has(input:-webkit-autofill) {
+  background: #111827 !important;
+}
+
+.robot-card .field input:-webkit-autofill,
+.robot-card .field input:-webkit-autofill:hover, 
+.robot-card .field input:-webkit-autofill:focus, 
+.robot-card .field input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #111827 inset !important;
+  box-shadow: 0 0 0 1000px #111827 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+  transition: background-color 50000s ease-in-out 0s;
+  border-radius: 4px;
+}
+
+.robot-card .field input:autofill {
+  box-shadow: 0 0 0 1000px #111827 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  color: #f8fafc !important;
+  caret-color: #f8fafc !important;
+}
+
+/* Modo Claro Autofill */
+[data-theme="light"] .robot-card .field:has(input:-webkit-autofill) {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .robot-card .field input:-webkit-autofill,
+[data-theme="light"] .robot-card .field input:-webkit-autofill:hover, 
+[data-theme="light"] .robot-card .field input:-webkit-autofill:focus, 
+[data-theme="light"] .robot-card .field input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  color: #0f172a !important;
+  caret-color: #0f172a !important;
+}
+
+[data-theme="light"] .robot-card .field input:autofill {
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  color: #0f172a !important;
+  caret-color: #0f172a !important;
+}
 
 .peek {
   border: none;
