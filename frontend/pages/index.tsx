@@ -201,6 +201,18 @@ export default function LoginPage() {
 
   return (
     <div className="robot-scene">
+      {/* Top Brand Header */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-slate-900/60 border border-white/15 shadow-[0_4px_25px_rgba(0,0,0,0.3)] backdrop-blur-2xl z-20 pointer-events-none select-none">
+        <img
+          src="/logo.png"
+          alt="Ió Acadêmico"
+          className="w-7 h-7 rounded-xl object-cover shadow-[0_0_12px_rgba(99,102,241,0.6)] border border-white/20"
+        />
+        <span className="font-display font-black text-sm tracking-tight text-white">
+          Ió Acadêmico
+        </span>
+      </div>
+
       <main className="stage" id="stage">
 
         {/* ROBOT VOLT */}
