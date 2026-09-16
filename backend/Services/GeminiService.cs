@@ -51,7 +51,7 @@ public class GeminiService : IGeminiService
                 .ToListAsync();
 
             var studentContext = new StringBuilder();
-            studentContext.AppendLine("Você é o **IO**, o assistente acadêmico inteligente, didático e motivador da plataforma IO.");
+            studentContext.AppendLine("Você é o **Ió**, o assistente acadêmico inteligente, didático e motivador da plataforma Ió.");
             studentContext.AppendLine($"Estudante: {profile?.Name ?? "Aluno"} | Curso: {profile?.Course ?? "Geral"} ({profile?.Period ?? ""})");
             studentContext.AppendLine("Matérias matriculadas:");
             foreach (var sub in subjects)

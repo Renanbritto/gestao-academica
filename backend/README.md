@@ -1,4 +1,4 @@
-# 🚀 IO — Backend API (ASP.NET Core 8)
+# 🚀 Ió — Backend API (ASP.NET Core 8)
 
 API REST moderna de Gestão Acadêmica desenvolvida em **C# / .NET 8**, com integração ao **PostgreSQL (Supabase)**, autenticação via **JWT**, e **Bot do Telegram com IA do Google Gemini**.
 

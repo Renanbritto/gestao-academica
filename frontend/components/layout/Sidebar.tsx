@@ -143,7 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = () => {
               <div className="absolute left-full ml-3.5 top-1/2 -translate-y-1/2 z-[100] opacity-0 pointer-events-none group-hover/bot:opacity-100 transition-opacity duration-200">
                 <div className="relative bg-slate-900/95 text-white text-xs font-bold py-1.5 px-3 rounded-xl border border-indigo-500/40 shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-2xl whitespace-nowrap flex items-center gap-1.5">
                   <Sparkles size={13} className="text-pink-400" />
-                  <span>IO no Telegram (Gemini IA)</span>
+                  <span>Ió no Telegram (Gemini IA)</span>
                   <div className="absolute right-full top-1/2 -translate-y-1/2 border-[5px] border-transparent border-r-slate-900/95" />
                 </div>
               </div>
@@ -152,7 +152,7 @@ export const Sidebar: React.FC<SidebarProps> = () => {
             <div className="p-3.5 rounded-2xl bg-gradient-to-br from-indigo-500/15 via-pink-500/10 to-transparent border border-indigo-500/30 space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-indigo-400">
                 <Bot size={16} />
-                <span>IO no Telegram</span>
+                <span>Ió no Telegram</span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
                 Receba lembretes e tire dúvidas com o Gemini IA.
@@ -190,7 +190,7 @@ export const Sidebar: React.FC<SidebarProps> = () => {
             {!isCollapsed && (
               <div className="overflow-hidden">
                 <div className="text-xs font-bold truncate text-[var(--text-main)]">
-                  {profile?.name || 'Estudante IO'}
+                  {profile?.name || 'Estudante Ió'}
                 </div>
                 <div className="text-[10px] text-[var(--text-muted)] truncate font-medium">
                   {profile?.course ? `${profile.course} • ${profile.period || ''}` : 'Faculdade'}

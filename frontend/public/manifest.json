@@ -1,6 +1,6 @@
 {
-  "name": "IO — Gestão Acadêmica Inteligente",
-  "short_name": "IO",
+  "name": "Ió — Gestão Acadêmica Inteligente",
+  "short_name": "Ió",
   "description": "Seu painel acadêmico mobile first com assistente do Telegram e Gemini IA",
   "start_url": "/dashboard",
   "display": "standalone",

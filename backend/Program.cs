@@ -29,7 +29,7 @@ var connectionString = ParsePostgreSqlConnectionString(rawConnectionString);
 // Informa no console qual host está sendo utilizado
 var hostInfo = connectionString.Split(';')
     .FirstOrDefault(s => s.StartsWith("Host=", StringComparison.OrdinalIgnoreCase)) ?? "Configurado";
-Console.WriteLine($"[IO Database] {hostInfo}");
+Console.WriteLine($"[Ió Database] {hostInfo}");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -81,7 +81,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "IO Acadêmico API",
+        Title = "Ió Acadêmico API",
         Version = "v1",
         Description = "Backend em C# ASP.NET Core 8 para Gestão Acadêmica, Telegram Bot e Gemini IA."
     });
@@ -134,7 +134,7 @@ if (app.Environment.IsDevelopment() || true) // Habilita Swagger no Railway para
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "IO Acadêmico API v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ió Acadêmico API v1");
         c.RoutePrefix = string.Empty; // Swagger na raiz da API
     });
 }

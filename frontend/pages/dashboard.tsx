@@ -183,7 +183,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="font-display font-bold text-xs text-[var(--text-main)] flex items-center gap-1.5">
-                <span>Conecte o IO no Telegram</span>
+                <span>Conecte o Ió no Telegram</span>
                 <span className="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 text-[10px] font-bold">Com Gemini IA</span>
               </h3>
               <p className="text-[11px] text-[var(--text-muted)] mt-0.5">

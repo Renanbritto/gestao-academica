@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data) {
         setProfile({
           id: data.id,
-          name: data.name || currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || 'Estudante IO',
+          name: data.name || currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || 'Estudante Ió',
           course: data.course || 'Direito',
           period: data.period || '7º Período',
           targetGpa: Number(data.target_gpa) || 85.0,
@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Se ainda não existe perfil no banco (ex: novo login Google ou trigger pendente), cria perfil inicial
         const initialProfile: Profile = {
           id: currentUser.id,
-          name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Estudante IO',
+          name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Estudante Ió',
           course: 'Direito',
           period: '7º Período',
           targetGpa: 85.0,
@@ -97,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.warn('Erro ao carregar perfil, usando dados de fallback da sessão:', e);
       setProfile({
         id: currentUser.id,
-        name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Estudante IO',
+        name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'Estudante Ió',
         course: 'Direito',
         period: '7º Período',
         targetGpa: 85.0,

@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>IO — Sua Gestão Acadêmica Inteligente</title>
+        <title>Ió — Sua Gestão Acadêmica Inteligente</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="description" content="Plataforma de gestão universitária moderna, mobile first com bot no Telegram e Gemini IA." />
       </Head>

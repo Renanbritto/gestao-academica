@@ -39,7 +39,7 @@ export default function RegisterPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [robotMood, setRobotMood] = useState<'idle' | 'shy' | 'happy'>('happy');
-  const [robotMessage, setRobotMessage] = useState('Oba! Uma nova conta no IO! 🚀');
+  const [robotMessage, setRobotMessage] = useState('Oba! Uma nova conta no Ió! 🚀');
 
   const handleGoogleSignup = async () => {
     setIsGoogleSubmitting(true);
@@ -80,7 +80,7 @@ export default function RegisterPage() {
     } else {
       setSuccessMsg('Conta criada com sucesso! Redirecionando...');
       setRobotMood('happy');
-      setRobotMessage('Prontinho! Bem-vindo à família IO! 🎉');
+      setRobotMessage('Prontinho! Bem-vindo à família Ió! 🎉');
       setTimeout(() => {
         router.push('/dashboard');
       }, 800);
@@ -98,7 +98,7 @@ export default function RegisterPage() {
           
           <div className="text-center space-y-1">
             <h1 className="text-2xl font-display font-black text-[var(--text-main)] tracking-tight">
-              Criar Conta no IO
+              Criar Conta no Ió
             </h1>
             <p className="text-xs text-[var(--text-muted)]">
               Comece a gerenciar suas notas, matérias e metas com facilidade.

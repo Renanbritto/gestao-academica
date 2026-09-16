@@ -144,7 +144,7 @@ export default function ProfilePage() {
 
             <div className="space-y-1 text-center sm:text-left">
               <h3 className="font-display font-bold text-base text-[var(--text-main)]">
-                {name || 'Estudante IO'}
+                {name || 'Estudante Ió'}
               </h3>
               <p className="text-xs text-[var(--text-muted)]">
                 {course ? `${course} • ${period}` : 'Universitário'}

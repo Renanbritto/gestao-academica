@@ -153,7 +153,7 @@ export default function LoginPage() {
         triggerShake();
       } else {
         setRobotMood('success');
-        setRobotMessage('Acesso liberado! Bem-vindo ao IO! 🚀');
+        setRobotMessage('Acesso liberado! Bem-vindo ao Ió! 🚀');
         setTimeout(() => {
           router.push('/dashboard');
         }, 400);
